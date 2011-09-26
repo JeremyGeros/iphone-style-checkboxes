@@ -45,12 +45,12 @@
         newWidth = onLabelWidth > offLabelWidth ? onLabelWidth : offLabelWidth;
         newWidth += this.handle.width() + this.handleMargin;
         return this.container.css({
-          width: newWidth
+					width: Math.max(this.minWidth, newWidth)
         });
       } else {
         newWidth = onLabelWidth > offLabelWidth ? onLabelWidth : offLabelWidth;
         return this.handle.css({
-          width: newWidth
+          width: Math.max(this.minHandleWidth, newWidth)
         });
       }
     };
@@ -154,13 +154,13 @@
     iOSCheckbox.prototype.initialPosition = function() {
       var offset;
       this.offLabel.css({
-        width: this.container.width() - this.containerRadius
+        width: Math.max(this.minWidth, this.container.width()) - this.containerRadius
       });
       offset = this.containerRadius + 1;
       if ($.browser.msie && $.browser.version < 7) {
         offset -= 3;
       }
-      this.rightSide = this.container.width() - this.handle.width() - offset;
+      this.rightSide = Math.max(this.minWidth, this.container.width()) - Math.max(this.minHandleWidth, this.handle.width()) - offset;
       if (this.elem.is(':checked')) {
         this.handle.css({
           left: this.rightSide
@@ -204,6 +204,8 @@
       x = event.pageX || event.originalEvent.changedTouches[0].pageX;
       return this.onDragEnd(event, x);
     };
+
+		// Min width and min handle width add to make sure checkbox render correctly when hidden
     iOSCheckbox.defaults = {
       duration: 200,
       checkedLabel: 'ON',
@@ -220,6 +222,8 @@
       dragThreshold: 5,
       handleMargin: 15,
       handleRadius: 4,
+			minWidth: 0,
+			minHandleWidth: 0,
       containerRadius: 5
     };
     return iOSCheckbox;

@@ -66,13 +66,13 @@ class iOSCheckbox
         offLabelWidth
       
       newWidth += @handle.width() + @handleMargin
-      @container.css(width: newWidth)
+      @container.css(width: Math.max(@minWidth, newWidth))
     else
       newWidth = if (onLabelWidth > offLabelWidth)
         onLabelWidth
       else 
         offLabelWidth
-      @handle.css(width: newWidth)
+      @handle.css(width: Math.max(@minHandleWidth, newWidth))
 
   onMouseDown: (event) ->
     event.preventDefault()
@@ -152,11 +152,11 @@ class iOSCheckbox
     
   # Setup the control's inital position
   initialPosition: ->
-    @offLabel.css(width: @container.width() - @containerRadius)
+    @offLabel.css(width: Math.max(@minWidth, @container.width()) - @containerRadius)
 
     offset     = @containerRadius + 1
     offset     -= 3 if $.browser.msie and $.browser.version < 7
-    @rightSide = @container.width() - @handle.width() - offset
+    @rightSide = Math.max(@minWidth, @container.width()) - Math.max(@minHandleWidth, @handle.width()) - offset
 
     if @elem.is(':checked')
       @handle.css(left: @rightSide)
@@ -216,6 +216,11 @@ class iOSCheckbox
     
     handleMargin:      15
     handleRadius:      4
+
+		# Hacks to ensure that box render correctly when hidden
+		minWidth: 0
+		minHandleWidth: 0
+
     containerRadius:   5
 
 $.iphoneStyle = @iOSCheckbox = iOSCheckbox
